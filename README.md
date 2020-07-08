@@ -15,3 +15,4 @@ A project to experiment with ADO.NET Entity Data Model (EDMX file)
       - Segment
       - UserList
    f. Model Namespace: DataLayer.Model
+   
