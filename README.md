@@ -16,5 +16,5 @@ A project to experiment with ADO.NET Entity Data Model (EDMX file)
      - UserList
    - Model Namespace: DataLayer.Model
 2. Run the SQL script file on database ContentWho
-3. Update Model from Database
+3. Open DModel.edmx and select Update Model from Database
    - Added the new table ProductOwner
