@@ -30,5 +30,6 @@ namespace DataLayer.Model
         public DbSet<Product> Products { get; set; }
         public DbSet<Segment> Segments { get; set; }
         public DbSet<UserList> UserLists { get; set; }
+        public DbSet<ProductOwner> ProductOwners { get; set; }
     }
 }

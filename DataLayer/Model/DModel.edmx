@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="DataLayer.Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+    <Schema Namespace="DataLayer.Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
         <EntityType Name="Jurisdiction">
           <Key>
             <PropertyRef Name="Id" />
@@ -37,6 +37,17 @@
           <Property Name="REPEditor" Type="nvarchar" MaxLength="50" />
           <Property Name="Url" Type="nvarchar" MaxLength="200" />
           <Property Name="Manager" Type="nvarchar" MaxLength="50" />
+          <Property Name="ProductOwnerId" Type="int" />
+        </EntityType>
+        <EntityType Name="ProductOwner">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="EmploymentStatus" Type="int" />
+          <Property Name="WorkingDays" Type="int" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Segment">
           <Key>
@@ -79,6 +90,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Product_ProductOwner">
+          <End Role="ProductOwner" Type="Self.ProductOwner" Multiplicity="0..1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductOwner">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="ProductOwnerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Product_Segment">
           <End Role="Segment" Type="Self.Segment" Multiplicity="1" />
           <End Role="Product" Type="Self.Product" Multiplicity="*" />
@@ -95,6 +118,7 @@
           <EntitySet Name="Jurisdiction" EntityType="Self.Jurisdiction" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PracticeArea" EntityType="Self.PracticeArea" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductOwner" EntityType="Self.ProductOwner" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Segment" EntityType="Self.Segment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserList" EntityType="Self.UserList" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Product_PracticeArea" Association="Self.FK_Product_PracticeArea">
@@ -105,13 +129,16 @@
             <End Role="Jurisdiction" EntitySet="Jurisdiction" />
             <End Role="Product" EntitySet="Product" />
           </AssociationSet>
+          <AssociationSet Name="FK_Product_ProductOwner" Association="Self.FK_Product_ProductOwner">
+            <End Role="ProductOwner" EntitySet="ProductOwner" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
           <AssociationSet Name="FK_Product_Segment" Association="Self.FK_Product_Segment">
             <End Role="Segment" EntitySet="Segment" />
             <End Role="Product" EntitySet="Product" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DataLayer.Model" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
@@ -152,6 +179,8 @@
           <NavigationProperty Name="Jurisdiction" Relationship="Self.FK_Product_Product" FromRole="Product" ToRole="Jurisdiction" />
           <NavigationProperty Name="PracticeArea" Relationship="Self.FK_Product_PracticeArea" FromRole="Product" ToRole="PracticeArea" />
           <NavigationProperty Name="Segment" Relationship="Self.FK_Product_Segment" FromRole="Product" ToRole="Segment" />
+          <Property Name="ProductOwnerId" Type="Int32" />
+          <NavigationProperty Name="ProductOwner" Relationship="DataLayer.Model.FK_Product_ProductOwner" FromRole="Product" ToRole="ProductOwner" />
         </EntityType>
         <EntityType Name="Segment">
           <Key>
@@ -225,7 +254,35 @@
             <End Role="Segment" EntitySet="Segments" />
             <End Role="Product" EntitySet="Products" />
           </AssociationSet>
+          <EntitySet Name="ProductOwners" EntityType="DataLayer.Model.ProductOwner" />
+          <AssociationSet Name="FK_Product_ProductOwner" Association="DataLayer.Model.FK_Product_ProductOwner">
+            <End Role="ProductOwner" EntitySet="ProductOwners" />
+            <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="ProductOwner">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EmploymentStatus" Type="Int32" />
+          <Property Name="WorkingDays" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Products" Relationship="DataLayer.Model.FK_Product_ProductOwner" FromRole="ProductOwner" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK_Product_ProductOwner">
+          <End Type="DataLayer.Model.ProductOwner" Role="ProductOwner" Multiplicity="0..1" />
+          <End Type="DataLayer.Model.Product" Role="Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductOwner">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="ProductOwnerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -252,6 +309,7 @@
           <EntitySetMapping Name="Products">
             <EntityTypeMapping TypeName="DataLayer.Model.Product">
               <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="ProductOwnerId" ColumnName="ProductOwnerId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="ProductName" ColumnName="ProductName" />
                 <ScalarProperty Name="Acronym" ColumnName="Acronym" />
@@ -284,6 +342,17 @@
               <MappingFragment StoreEntitySet="UserList">
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductOwners">
+            <EntityTypeMapping TypeName="DataLayer.Model.ProductOwner">
+              <MappingFragment StoreEntitySet="ProductOwner">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="WorkingDays" ColumnName="WorkingDays" />
+                <ScalarProperty Name="EmploymentStatus" ColumnName="EmploymentStatus" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

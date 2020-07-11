@@ -27,9 +27,11 @@ namespace DataLayer.Model
         public string REPEditor { get; set; }
         public string Url { get; set; }
         public string Manager { get; set; }
+        public Nullable<int> ProductOwnerId { get; set; }
     
         public virtual Jurisdiction Jurisdiction { get; set; }
         public virtual PracticeArea PracticeArea { get; set; }
         public virtual Segment Segment { get; set; }
+        public virtual ProductOwner ProductOwner { get; set; }
     }
 }

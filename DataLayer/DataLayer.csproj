@@ -71,6 +71,9 @@
     <Compile Include="Model\Product.cs">
       <DependentUpon>DModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\ProductOwner.cs">
+      <DependentUpon>DModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\Segment.cs">
       <DependentUpon>DModel.tt</DependentUpon>
     </Compile>

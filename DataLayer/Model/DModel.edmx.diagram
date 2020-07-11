@@ -13,6 +13,8 @@
         <AssociationConnector Association="DataLayer.Model.FK_Product_Product" ManuallyRouted="false" />
         <AssociationConnector Association="DataLayer.Model.FK_Product_PracticeArea" ManuallyRouted="false" />
         <AssociationConnector Association="DataLayer.Model.FK_Product_Segment" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="DataLayer.Model.ProductOwner" Width="1.5" PointX="5.375" PointY="5.875" />
+        <AssociationConnector Association="DataLayer.Model.FK_Product_ProductOwner" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
